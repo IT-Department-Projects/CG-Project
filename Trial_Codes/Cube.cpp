@@ -64,30 +64,30 @@ void DrawCube(void) {
     glFlush();
 }
 
-// void animation(void) {
+void animation(void) {
    
-//    yRotated += 0.01;
-//    xRotated += 0.02;
+   yRotated += 0.01;
+   xRotated += 0.02;
    
-//    DrawCube();
-// }
+   DrawCube();
+}
 
-// void reshape(int x, int y) {
+void reshape(int x, int y) {
     
-//     if (y == 0 || x == 0) 
-//         return;  //Nothing is visible then, so return
+    if (y == 0 || x == 0) 
+        return;  //Nothing is visible then, so return
     
-//     //Set a new projection matrix
-//     glMatrixMode(GL_PROJECTION);
-//     glLoadIdentity();
+    //Set a new projection matrix
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
     
-//     //Angle of view:40 degrees
-//     //Near clipping plane distance: 0.5
-//     //Far clipping plane distance: 20.0
-//     gluPerspective(40.0,(GLdouble)x/(GLdouble)y,0.5,20.0);
-//     glMatrixMode(GL_MODELVIEW);
-//     glViewport(0,0,x,y);  //Use the whole window for rendering
-// }
+    //Angle of view:40 degrees
+    //Near clipping plane distance: 0.5
+    //Far clipping plane distance: 20.0
+    gluPerspective(40.0,(GLdouble)x/(GLdouble)y,0.5,20.0);
+    glMatrixMode(GL_MODELVIEW);
+    glViewport(0,0,x,y);  //Use the whole window for rendering
+}
 
 int main(int argc, char** argv){
     
@@ -109,3 +109,4 @@ int main(int argc, char** argv){
     
     return 0;
 }
+
