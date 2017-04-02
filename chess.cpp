@@ -7,9 +7,8 @@
 #include "GL/freeglut.h"
 #include "GL/gl.h"
 
-/* Change to <GL/glut.h> on Linux systems */
-
 using namespace std;
+
 
 /* Co ordinate system variables */
 
@@ -22,21 +21,21 @@ float BlockDistance;
 float MoveBeginX;
 float MoveBeginY;
 
+
 /* Board element definiions */
 
-#define PawnIndex   8
-#define PieceType   8
-#define Properties  3
-
+//Co-Ordinate system in the Matrix
 #define XCoordinate 0
 #define YCoordinate 1
 #define Valid       2
 #define Background  2
 
+//Colouring of each element
 #define Color       2
 #define ColorBlack  0
 #define ColorWhite  1
 
+//Give Unique ordering to each of the elements
 #define RookLeft    0
 #define KnightLeft  1
 #define BishopLeft  2
@@ -46,11 +45,18 @@ float MoveBeginY;
 #define KnightRight 6
 #define RookRight   7
 
+// Definitions for other elements
+#define PawnIndex   8
+#define PieceType   8
+#define Properties  3
+
+
 /* Board movement variables */
 
 int ChosenPiece;
 int ChosenColor;
 int Turn;
+
 
 /* Texture map variables */
 
@@ -64,6 +70,7 @@ char* BoardData;
 
 void InitializeCoordinates();
 
+/* Class Definition */
 class BoardPieces {
 public:
 
@@ -76,8 +83,7 @@ public:
 
     BoardPieces() {
         InitializeCoordinates();
-        for(int Count = 0; Count<8; Count++)
-        {
+        for(int Count = 0; Count<8; Count++) {
             strcpy(PawnPath[Count][ColorWhite][ColorWhite],"img/White Pawn White.raw");
             strcpy(PawnPath[Count][ColorBlack][ColorWhite],"img/Black Pawn White.raw");
             strcpy(PawnPath[Count][ColorWhite][ColorBlack],"img/White Pawn Black.raw");
@@ -131,11 +137,10 @@ struct BoardStatus {
 }BoardStatus;
 
 
-void InitializeCoordinates()
-{
+void InitializeCoordinates() {
     /* Initialization of X and Y co ordinates for all the board pieces */
-    for(int Count = 0; Count<8; Count++)
-    {
+    for(int Count = 0; Count<8; Count++) {
+
         Piece.Pawns[Count][Valid][ColorBlack] = 1;
         Piece.Pawns[Count][Valid][ColorWhite] = 1;
         Piece.OtherPieces[Count][Valid][ColorBlack] = 1;
@@ -154,8 +159,7 @@ void InitializeCoordinates()
 
 }
 
-void InitializeBoardMatrix()
-{
+void InitializeBoardMatrix() {
     /* Initialize first player as White */
     Turn = ColorWhite;
 
@@ -164,34 +168,28 @@ void InitializeBoardMatrix()
 
     /* Board content member initializations */
     for(Row = 0; Row < 8; Row++)
-        for(Column = 0; Column < 8; Column++)
-        {
-            if(Row == 0)
-            {
+        for(Column = 0; Column < 8; Column++) {
+            if(Row == 0) {
                 BoardStatus.CurrentPiece[Row][Column] = Column + 8;
                 BoardStatus.PieceColor[Row][Column] = ColorBlack;
             }
 
-            else if(Row == 1)
-            {
+            else if(Row == 1) {
                 BoardStatus.CurrentPiece[Row][Column] = Column;
                 BoardStatus.PieceColor[Row][Column] = ColorBlack;
             }
 
-            else if(Row == 6)
-            {
+            else if(Row == 6) {
                 BoardStatus.CurrentPiece[Row][Column] = Column;
                 BoardStatus.PieceColor[Row][Column] = ColorWhite;
             }
 
-            else if(Row == 7)
-            {
+            else if(Row == 7) {
                 BoardStatus.CurrentPiece[Row][Column] = Column + 8;
                 BoardStatus.PieceColor[Row][Column] = ColorWhite;
             }
 
-            else
-            {
+            else {
                 BoardStatus.CurrentPiece[Row][Column] = -1;
                 BoardStatus.PieceColor[Row][Column] = -1;
             }
@@ -212,8 +210,7 @@ void GenerateTextures() {
 
     for(int Count = 0 ; Count < 8 ; Count++ )
         for(int ForegroundColor = 0 ; ForegroundColor < 2 ; ForegroundColor++ )
-            for(int BackgroundColor = 0; BackgroundColor < 2; BackgroundColor++ )
-            {
+            for(int BackgroundColor = 0; BackgroundColor < 2; BackgroundColor++ ) {
 
                 Pointer = fopen(Piece.PawnPath[Count][ForegroundColor][BackgroundColor], "rb");
                 fread(Data, 256*256*3, 1, Pointer);
@@ -234,9 +231,7 @@ void GenerateTextures() {
                 glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
                 glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  GL_LINEAR );
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, Data);
-
             }
-
 }
 
 void DrawBoard() {
@@ -281,10 +276,8 @@ void MyDisplay() {
     DrawBoard();
     /* Draw the board on the screen */
 
-    for(int Count = 0 ; Count < 8 ; Count++ )
-    {
-        if((Piece.OtherPieces[Count][XCoordinate][ColorWhite] + Piece.OtherPieces[Count][YCoordinate][ColorWhite]) % 200 == ColorBlack)
-        {
+    for(int Count = 0 ; Count < 8 ; Count++ ) {
+        if((Piece.OtherPieces[Count][XCoordinate][ColorWhite] + Piece.OtherPieces[Count][YCoordinate][ColorWhite]) % 200 == ColorBlack) {
             if(Piece.OtherPieces[Count][Valid][ColorWhite] == 1)
                 DrawPiece(Count+8, ColorWhite, ColorBlack, Piece.OtherPieces[Count][XCoordinate][ColorWhite], Piece.OtherPieces[Count][YCoordinate][ColorWhite]);
         }
@@ -292,8 +285,7 @@ void MyDisplay() {
             DrawPiece(Count+8, ColorWhite, ColorWhite, Piece.OtherPieces[Count][XCoordinate][ColorWhite], Piece.OtherPieces[Count][YCoordinate][ColorWhite]);
 
 
-        if((Piece.OtherPieces[Count][XCoordinate][ColorBlack] + Piece.OtherPieces[Count][YCoordinate][ColorBlack]) % 200 == ColorBlack)
-        {
+        if((Piece.OtherPieces[Count][XCoordinate][ColorBlack] + Piece.OtherPieces[Count][YCoordinate][ColorBlack]) % 200 == ColorBlack) {
             if(Piece.OtherPieces[Count][Valid][ColorBlack] == 1)
                 DrawPiece(Count+8, ColorBlack, ColorBlack, Piece.OtherPieces[Count][XCoordinate][ColorBlack], Piece.OtherPieces[Count][YCoordinate][ColorBlack]);
         }
@@ -301,8 +293,7 @@ void MyDisplay() {
             DrawPiece(Count+8,ColorBlack,ColorWhite, Piece.OtherPieces[Count][XCoordinate][ColorBlack], Piece.OtherPieces[Count][YCoordinate][ColorBlack]);
 
 
-        if((Piece.Pawns[Count][XCoordinate][ColorWhite] + Piece.Pawns[Count][YCoordinate][ColorWhite]) % 200 == ColorBlack)
-        {
+        if((Piece.Pawns[Count][XCoordinate][ColorWhite] + Piece.Pawns[Count][YCoordinate][ColorWhite]) % 200 == ColorBlack) {
             if(Piece.Pawns[Count][Valid][ColorWhite] == 1)
                 DrawPiece(Count,ColorWhite,ColorBlack, Piece.Pawns[Count][XCoordinate][ColorWhite], Piece.Pawns[Count][YCoordinate][ColorWhite]);
         }
@@ -310,8 +301,7 @@ void MyDisplay() {
             DrawPiece(Count,ColorWhite,ColorWhite, Piece.Pawns[Count][XCoordinate][ColorWhite], Piece.Pawns[Count][YCoordinate][ColorWhite]);
 
 
-        if((Piece.Pawns[Count][XCoordinate][ColorBlack] + Piece.Pawns[Count][YCoordinate][ColorBlack]) % 200 == ColorBlack)
-        {
+        if((Piece.Pawns[Count][XCoordinate][ColorBlack] + Piece.Pawns[Count][YCoordinate][ColorBlack]) % 200 == ColorBlack) {
             if(Piece.Pawns[Count][Valid][ColorBlack] == 1)
                 DrawPiece(Count,ColorBlack,ColorBlack, Piece.Pawns[Count][XCoordinate][ColorBlack], Piece.Pawns[Count][YCoordinate][ColorBlack]);
         }
@@ -329,7 +319,7 @@ void ResetGame() {
     glClear(GL_COLOR_BUFFER_BIT);
     /* Reinitialize board members and X and Y coordinates for the pieces */
     InitializeBoardMatrix();
-    BoardPieces::BoardPieces();
+    BoardPieces();
     MyDisplay();
 }
 
@@ -578,8 +568,7 @@ void DisplayMessage(const char* String) {
     /* Generate a semi transparent polygon for a warning message */
 
     glEnable(GL_POLYGON_SMOOTH);
-    for(Counter = 0; Counter <= 0.8; Counter = Counter + 0.1 )
-    {
+    for(Counter = 0; Counter <= 0.8; Counter = Counter + 0.1 ) {
         glColor3f(Counter, 0, 0);
         glBegin(GL_POLYGON);
         glVertex2f(-400, -150);
